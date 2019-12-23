@@ -1,0 +1,27 @@
+1. Query for KG info
+2. Start accept payment - response when payment success, open which locker info
+3. Check locker status
+4. Open all unwashed locker for worker
+5. Done washed lock back into locker which is free, response with locker number and open the locker -> check locker status within seconds interval
+6. Open the specific locker for delivery
+7. Get unwashed list
+8. Get washed list
+
+Operator
+    > locker
+        >Locker1
+            >lock status
+            >present status
+        >Locker2
+        ....
+        >Locker16
+        
+    > Scale
+        > Weight
+        > status
+    > payment
+        > Transaction ID
+            >Type
+            >Amount
+            >Time
+            >User ID
