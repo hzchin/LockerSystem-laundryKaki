@@ -22,6 +22,9 @@ var paymentSchema = mongoose.Schema({
   ProductType: {
     type: Number
   },
+  outlet: {
+    type: Object,
+  },
   create_date: {
     type: Date,
     default: Date.now

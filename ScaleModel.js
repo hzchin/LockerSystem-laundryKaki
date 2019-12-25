@@ -10,9 +10,12 @@ var scaleSchema = mongoose.Schema({
       type: String,
       required: true
   },
-  status: {
+  stable: {
     type: Boolean,
     required: true
+  },
+  outlet: {
+    type: Object,
   },
   create_date: {
       type: Date,

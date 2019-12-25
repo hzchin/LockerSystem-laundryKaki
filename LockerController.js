@@ -27,8 +27,8 @@ exports.index = function (req, res, next) {
                 });
             });
         } else {
-            res.json({
-                status: "success",
+            res.status(400).json({
+                status: "Fail to find correct code",
                 message: "Incorrect action code"
             });
         }
@@ -53,26 +53,31 @@ exports.command = (req, res, next) => {
         if (ApiParameters.action_code == "UserOpen"){
             console.log("Initiate UserOpen ");
             lock(OPEN,ApiQuery.locker);
+            nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');
         } else if (ApiParameters.action_code == "OpenAll"){
             console.log("Initiate OpenAll");
             lock(OPEN,ApiQuery.locker);
+            nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');
         } else if (ApiParameters.action_code == "StaffOpen"){
             console.log("Initiate StaffOpen");
             lock(OPEN,ApiQuery.locker);
+            nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');            
         } else if (ApiParameters.action_code == "RiderOpen"){
             console.log("RiderOpen");
             lock(OPEN,ApiQuery.locker);
+            nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');            
         } else if (ApiParameters.action_code == "StaffDeposit"){
             console.log("Initiate StaffDeposit ");
             lock(OPEN,ApiQuery.locker);
+            nodeClient.write(hexVal); 
             
             res.status(200).send('Receive action code');
         } else {
@@ -84,8 +89,7 @@ exports.command = (req, res, next) => {
         console.log(ApiBody)
         console.log("query: ",ApiQuery);
     } catch(err){
-        
-        next(err);
+                next(err);
     }    
 };
 

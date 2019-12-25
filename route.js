@@ -24,18 +24,18 @@ router.route('/lockers/:lockers_id/outlet/:outlet_id')
 // });
 
 // Scale routes
-router.route('/scale')
+router.route('/scale/:action_code')
     .get(scaleController.index);
     
 router.route('/scale/:scale_id')
     .get(scaleController.view);
 
 // Payment routes
-router.route('/payment')
+router.route('/payment/:action_code')
     .get(paymentController.index)
     .post(paymentController.command);
 
-router.route('/payment/:payment_id')
+router.route('/payment/:action_code')
     .get(paymentController.view);
 
 

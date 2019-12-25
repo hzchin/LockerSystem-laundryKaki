@@ -22,6 +22,10 @@ var lockerSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  outlet: {
+    type: Object,
+    required: true
+  },
   create_date: {
       type: Date,
       default: Date.now

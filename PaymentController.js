@@ -4,19 +4,34 @@ TCPServicePayloadResponse = require('./PaymentModel');
 
 // Handle index actions
 exports.index = function (req, res) {
-    Payments.get(function (err, payment) {
-        if (err) {
+    try{
+        var ApiParameters = req.params,
+            ApiBody = req.body,
+            ApiQuery = req.query;
+        console.log(ApiParameters);
+        if (ApiParameters.action_code == "PaymentRequest"){
+            console.log("Initiate PaymentRequest");
+
+            res.status(200).send('Receive action code');
+        } else if (ApiParameters.action_code == "PaymentStatus"){
+            console.log("Initiate PaymentStatus");
+
+            res.status(200).send('Receive action code');
+        } else if (ApiParameters.action_code == "VoidPayment"){
+            console.log("Initiate VoidPayment");
+
+            res.status(200).send('Receive action code');            
+        } else {
             res.json({
-                status: "error",
-                message: err,
+                status: "success",
+                message: "Incorrect action code"
             });
         }
-        res.json({
-            status: "success",
-            message: "Locker data retrieved successfully",
-            data: payment
-        });
-    });
+        console.log(ApiBody)
+        console.log("query: ",ApiQuery);
+    } catch(err){
+        next(err);
+    } 
 };
 
 // Handle view locker info
@@ -32,15 +47,35 @@ exports.view = function (req, res) {
 };
 
 exports.command = function (req, res){
-    var key = req.query;
-    console.log(key);
-    console.log("body is ", req.body);
-    if (err)
-        res.send(err);
-    res.json({
-        message: 'Locker details loading..',
-        data: payment
-    });
+    try{
+        var ApiParameters = req.params,
+            ApiBody = req.body,
+            ApiQuery = req.query;
+        console.log(ApiParameters);
+        if (ApiParameters.action_code == "PaymentRequest"){
+            console.log("Initiate PaymentRequest");
+
+            res.status(200).send('Receive action code');
+        } else if (ApiParameters.action_code == "PaymentStatus"){
+            console.log("Initiate PaymentStatus");
+
+            res.status(200).send('Receive action code');
+        } else if (ApiParameters.action_code == "VoidPayment"){
+            console.log("Initiate VoidPayment");
+
+            res.status(200).send('Receive action code');            
+        } else {
+            res.json({
+                status: "success",
+                message: "Incorrect action code"
+            });
+        }
+        SaleRequest.PaymentType = ApiQuery.PaymentType;
+        console.log(ApiBody)
+        console.log("query: ",ApiQuery);
+    } catch(err){
+        next(err);
+    } 
 }
 
 // Handle create contact actions
