@@ -50,35 +50,35 @@ exports.command = (req, res, next) => {
             ApiBody = req.body,
             ApiQuery = req.query;
         console.log(ApiParameters);
-        if (ApiParameters.action_code == "UserOpen"){
+        if (ApiParameters.action_code == "UserOpen" && ApiParameters.outlet_id == Outlet){
             console.log("Initiate UserOpen ");
             lock(OPEN,ApiQuery.locker);
             nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');
-        } else if (ApiParameters.action_code == "OpenAll"){
+        } else if (ApiParameters.action_code == "OpenAll" && ApiParameters.outlet_id == Outlet){
             console.log("Initiate OpenAll");
             lock(OPEN,ApiQuery.locker);
             nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');
-        } else if (ApiParameters.action_code == "StaffOpen"){
+        } else if (ApiParameters.action_code == "StaffOpen" && ApiParameters.outlet_id == Outlet){
             console.log("Initiate StaffOpen");
             lock(OPEN,ApiQuery.locker);
             nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');            
-        } else if (ApiParameters.action_code == "RiderOpen"){
+        } else if (ApiParameters.action_code == "RiderOpen" && ApiParameters.outlet_id == Outlet){
             console.log("RiderOpen");
             lock(OPEN,ApiQuery.locker);
             nodeClient.write(hexVal); 
 
             res.status(200).send('Receive action code');            
-        } else if (ApiParameters.action_code == "StaffDeposit"){
+        } else if (ApiParameters.action_code == "StaffDeposit" && ApiParameters.outlet_id == Outlet){
             console.log("Initiate StaffDeposit ");
             lock(OPEN,ApiQuery.locker);
             nodeClient.write(hexVal); 
-            
+
             res.status(200).send('Receive action code');
         } else {
             res.json({
@@ -133,23 +133,27 @@ var SUM = 0x37;
 var bytesToSend = [PREFIX, ADDR, CMD, SUFFIX, SUM],
     hexVal = new Uint8Array(bytesToSend);
 var response = {address:0, command:0, lock:0, present:0};
+const Outlet = {
+    location: "TamanSungaiBesi",
+    brand: "WashStudio"
+}; //Hardcoded Location
 var lockerStatus = [
-    {name: 'locker1', bitmask: 0x0100, lock: false, empty: false},
-    {name: 'locker2', bitmask: 0x0200, lock: false, empty: false},
-    {name: 'locker3', bitmask: 0x0400, lock: false, empty: false},
-    {name: 'locker4', bitmask: 0x0800, lock: false, empty: false},
-    {name: 'locker5', bitmask: 0x1000, lock: false, empty: false},
-    {name: 'locker6', bitmask: 0x2000, lock: false, empty: false},
-    {name: 'locker7', bitmask: 0x4000, lock: false, empty: false},
-    {name: 'locker8', bitmask: 0x8000, lock: false, empty: false},
-    {name: 'locker9', bitmask: 0x0001, lock: false, empty: false},
-    {name: 'locker10', bitmask: 0x0002, lock: false, empty: false},
-    {name: 'locker11', bitmask: 0x0004, lock: false, empty: false},
-    {name: 'locker12', bitmask: 0x0008, lock: false, empty: false},
-    {name: 'locker13', bitmask: 0x0010, lock: false, empty: false},
-    {name: 'locker14', bitmask: 0x0020, lock: false, empty: false},
-    {name: 'locker15', bitmask: 0x0040, lock: false, empty: false},
-    {name: 'locker16', bitmask: 0x0080, lock: false, empty: false}
+    {name: 'locker1', bitmask: 0x0100, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker2', bitmask: 0x0200, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker3', bitmask: 0x0400, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker4', bitmask: 0x0800, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker5', bitmask: 0x1000, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker6', bitmask: 0x2000, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker7', bitmask: 0x4000, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker8', bitmask: 0x8000, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker9', bitmask: 0x0001, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker10', bitmask: 0x0002, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker11', bitmask: 0x0004, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker12', bitmask: 0x0008, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker13', bitmask: 0x0010, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker14', bitmask: 0x0020, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker15', bitmask: 0x0040, lock: false, empty: false, staffReady:false, riderReady:false},
+    {name: 'locker16', bitmask: 0x0080, lock: false, empty: false, staffReady:false, riderReady:false}
 ];
 
 // This function create and return a net.Socket object to represent TCP client.
@@ -174,8 +178,7 @@ function getConn(connName){
     client.on('data', function (data) {
         console.log('Server return data : ' + data);
         lockerStatus = maskingCompare(data);
-        console.log(lockerStatus);
-        
+        // console.log(lockerStatus);        
     });
 
     // When connection disconnected.
@@ -224,7 +227,21 @@ var lock = function(command, numbersLock){
         bytesToSend = [PREFIX, ADDR, CMD, SUFFIX, SUM];
         hexVal = new Uint8Array(bytesToSend);
    
-    }else if (command == STATUS){
+    } else if (command == STATUS){
+        CMD = 0x30;
+        ADDR = (numbersLock-1) & 0x0F;
+        SUM = PREFIX + SUFFIX + CMD + ADDR;
+        bytesToSend = [PREFIX, ADDR, CMD, SUFFIX, SUM];
+        hexVal = new Uint8Array(bytesToSend);
+        
+    } else if (command == SREADY){ //Staff Ready
+        CMD = 0x30;
+        ADDR = (numbersLock-1) & 0x0F;
+        SUM = PREFIX + SUFFIX + CMD + ADDR;
+        bytesToSend = [PREFIX, ADDR, CMD, SUFFIX, SUM];
+        hexVal = new Uint8Array(bytesToSend);
+        
+    } else if (command == RREADY){ //Rider Ready
         CMD = 0x30;
         ADDR = (numbersLock-1) & 0x0F;
         SUM = PREFIX + SUFFIX + CMD + ADDR;
@@ -240,6 +257,7 @@ var nodeClient = getConn('Node');
 test = lock(STATUS,5);
 // maskingCompare('02003522810040037c');
 
-console.log(hexVal);
+// console.log(hexVal);
+// lock(STATUS,2);
 nodeClient.write(hexVal); 
 
